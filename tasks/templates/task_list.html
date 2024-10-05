@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .task-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .task-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .task-list li.completed {
+            text-decoration: line-through;
+            color: green;
+        }
+
+        .task-details {
+            flex-grow: 1;
+        }
+
+        .task-priority {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .task-actions a, .task-actions button {
+            padding: 5px 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .task-actions button {
+            background-color: #28a745;
+        }
+
+        .task-actions a:hover, .task-actions button:hover {
+            background-color: #0056b3;
+        }
+
+        .task-actions button.mark-completed {
+            background-color: #28a745;
+        }
+
+        .task-actions button.mark-completed:hover {
+            background-color: #218838;
+        }
+
+        .create-task-btn {
+            display: block;
+            width: 150px;
+            margin: 20px auto;
+            padding: 10px;
+            text-align: center;
+            background-color: #007BFF;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .create-task-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .due-soon {
+            color: red;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Task List</h1>
+
+        {% if tasks %}
+        <ul class="task-list">
+            {% for task in tasks %}
+            <li class="{% if task.completed %}completed{% endif %} {% if task.is_due_soon %}due-soon{% endif %}">
+                <div class="task-details">
+                    <span class="task-priority">[{{ task.priority|upper }}]</span>
+                    <strong>{{ task.title }}</strong>
+                    <p>{{ task.description }}</p>
+                    <small>Due: {{ task.due_date|date:"M d, Y H:i" }}</small>
+                </div>
+                <div class="task-actions">
+                    {% if not task.completed %}
+                    <form method="POST" action="{% url 'task_complete' task.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="mark-completed">Mark as Completed</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>You don't have any tasks yet. <a href="{% url 'task_create' %}">Create one</a>!</p>
+        {% endif %}
+
+        <a href="{% url 'task_create' %}" class="create-task-btn">Create New Task</a>
+    </div>
+</body>
+</html>

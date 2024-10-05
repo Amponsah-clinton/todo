@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Task</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Create New Task</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <label for="title">Task Title:</label>
+            <input type="text" name="title" required>
+            <label for="due_date">Due Date:</label>
+            <input type="datetime-local" name="due_date" required>
+            <label for="priority">Priority:</label>
+            <select name="priority">
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+            </select>
+            <button type="submit" class="btn">Create Task</button>
+        </form>
+    </div>
+</body>
+</html>
